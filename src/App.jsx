@@ -36,6 +36,7 @@ const App = () => {
   );
 
   const topFourResults = state.pokemonData
+
     .map((data, index) => {
       return (
         <li>
@@ -71,7 +72,7 @@ const App = () => {
         <small>Maximum Combat Points</small>
       </label>
       <input type="text" className="input" placeholder="Pokemon or type" />
-      <div className="loader"></div>
+      {state.loading ? <div className="loader"></div> : null}
       <ul className="suggestions">{topFourResults}</ul>
     </>
   );
