@@ -35,7 +35,7 @@ const App = () => {
     </li>
   );
 
-  const filterPokemonByName = (pokemon) => {
+  const filterPokemonByName = (pokemon, input) => {
     if (input.length > 0) {
       if (pokemon.Name.toLowerCase().includes(input.toLowerCase())) {
         return true;
@@ -48,18 +48,40 @@ const App = () => {
     return true;
   };
 
+  function escapeRegExp(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  }
+
+  const highlightInputInName = (name, input) => {
+    if (input.length > 0) {
+      const regex = new RegExp(`(${escapeRegExp(input)})`, 'gi');
+      const replaced = name.replace(regex, (match) => `,${match},`);
+      const split = replaced.split(',');
+      return (
+        <h1>
+          {split.map((section) => {
+            return regex.test(section) ? (
+              <span className="hl">{section}</span>
+            ) : (
+              section
+            );
+          })}
+        </h1>
+      );
+    }
+    return <h1>{name}</h1>;
+  };
+
   const topFourResults = state.pokemonData
     .filter((pokemon) => {
-      return filterPokemonByName(pokemon);
+      return filterPokemonByName(pokemon, input);
     })
     .map((data) => {
       return (
         <li key={data.Number}>
           <img src={data.img} alt={data.About} />
           <div className="info">
-            <h1>
-              <span className="hl">{data.Name}</span>
-            </h1>
+            {highlightInputInName(data.Name, input)}
             {data.Types.map((type) => {
               return (
                 <span className={`type ${type.toLowerCase()}`}>{type}</span>
@@ -73,7 +95,6 @@ const App = () => {
 
   const handleInput = (event) => {
     setInput(event.target.value);
-    console.log(event.target.value);
   };
 
   return (
