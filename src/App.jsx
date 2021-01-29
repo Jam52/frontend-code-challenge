@@ -17,7 +17,6 @@ const App = () => {
     const fetchData = async () => {
       const result = await fetch(URL_PATH);
       const data = await result.json();
-      console.log(data);
       setState({ loading: false, pokemonData: await data });
     };
     fetchData();
@@ -72,7 +71,24 @@ const App = () => {
     return <h1>{name}</h1>;
   };
 
-  const topFourResults = state.pokemonData
+  const [isSortedByCP, setSortedByCP] = useState(false);
+
+  const sortPokemon = (pokemon, isSorted) => {
+    if (isSorted) {
+      return [...pokemon].sort((a, b) => {
+        if (a.MaxCP > b.MaxCP) {
+          return -1;
+        }
+        if (a.MaxCP < b.MaxCP) {
+          return 1;
+        }
+        return 0;
+      });
+    }
+    return pokemon;
+  };
+
+  const topFourResults = sortPokemon(state.pokemonData, isSortedByCP)
     .filter((pokemon) => {
       return filterPokemonByName(pokemon, input);
     })
@@ -100,7 +116,11 @@ const App = () => {
   return (
     <>
       <label htmlFor="maxCP" className="max-cp">
-        <input type="checkbox" id="maxCP" />
+        <input
+          type="checkbox"
+          id="maxCP"
+          onChange={() => setSortedByCP(!isSortedByCP)}
+        />
         <small>Maximum Combat Points</small>
       </label>
       <input
