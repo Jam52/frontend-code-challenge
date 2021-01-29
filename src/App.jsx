@@ -35,11 +35,26 @@ const App = () => {
     </li>
   );
 
-  const topFourResults = state.pokemonData
+  const filterPokemonByName = (pokemon) => {
+    if (input.length > 0) {
+      if (pokemon.Name.toLowerCase().includes(input.toLowerCase())) {
+        return true;
+      }
+      if (pokemon.Types.join(' ').toLowerCase().includes(input.toLowerCase())) {
+        return true;
+      }
+      return false;
+    }
+    return true;
+  };
 
-    .map((data, index) => {
+  const topFourResults = state.pokemonData
+    .filter((pokemon) => {
+      return filterPokemonByName(pokemon);
+    })
+    .map((data) => {
       return (
-        <li>
+        <li key={data.Number}>
           <img src={data.img} alt={data.About} />
           <div className="info">
             <h1>
@@ -58,20 +73,22 @@ const App = () => {
 
   const handleInput = (event) => {
     setInput(event.target.value);
+    console.log(event.target.value);
   };
 
   return (
     <>
       <label htmlFor="maxCP" className="max-cp">
-        <input
-          type="checkbox"
-          id="maxCP"
-          onChange={(event) => handleInput(event)}
-          value={input}
-        />
+        <input type="checkbox" id="maxCP" />
         <small>Maximum Combat Points</small>
       </label>
-      <input type="text" className="input" placeholder="Pokemon or type" />
+      <input
+        type="text"
+        className="input"
+        placeholder="Pokemon or type"
+        onChange={(event) => handleInput(event)}
+        value={input}
+      />
       {state.loading ? <div className="loader"></div> : null}
       <ul className="suggestions">{topFourResults}</ul>
     </>
