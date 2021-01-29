@@ -21,6 +21,38 @@ const App = () => {
     fetchData();
   }, []);
 
+  const noResult = (
+    <li>
+      <img
+        src="https://cyndiquil721.files.wordpress.com/2014/02/missingno.png"
+        alt=""
+      />
+      <div className="info">
+        <h1 className="no-results">No results</h1>
+      </div>
+    </li>
+  );
+
+  const topFourResults = state.pokemonData
+    .map((data, index) => {
+      return (
+        <li>
+          <img src={data.img} alt={data.About} />
+          <div className="info">
+            <h1>
+              <span className="hl">{data.Name}</span>
+            </h1>
+            {data.Types.map((type) => {
+              return (
+                <span className={`type ${type.toLowerCase()}`}>{type}</span>
+              );
+            })}
+          </div>
+        </li>
+      );
+    })
+    .slice(0, 4);
+
   return (
     <>
       <label htmlFor="maxCP" className="max-cp">
@@ -29,30 +61,7 @@ const App = () => {
       </label>
       <input type="text" className="input" placeholder="Pokemon or type" />
       <div className="loader"></div>
-      <ul className="suggestions">
-        <li>
-          <img
-            src="http://assets.pokemon.com/assets/cms2/img/pokedex/full/025.png"
-            alt=""
-          />
-          <div className="info">
-            <h1>
-              <span className="hl">Pika</span>chu
-            </h1>
-            <span className="type electric">Electric</span>
-            <span className="type normal">Normal</span>
-          </div>
-        </li>
-        <li>
-          <img
-            src="https://cyndiquil721.files.wordpress.com/2014/02/missingno.png"
-            alt=""
-          />
-          <div className="info">
-            <h1 className="no-results">No results</h1>
-          </div>
-        </li>
-      </ul>
+      <ul className="suggestions">{topFourResults}</ul>
     </>
   );
 };
