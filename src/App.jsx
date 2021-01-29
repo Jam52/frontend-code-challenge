@@ -10,6 +10,8 @@ const App = () => {
     loading: false,
   });
 
+  const [input, setInput] = useState('');
+
   useEffect(() => {
     setState({ ...state, loading: true });
     const fetchData = async () => {
@@ -53,10 +55,19 @@ const App = () => {
     })
     .slice(0, 4);
 
+  const handleInput = (event) => {
+    setInput(event.target.value);
+  };
+
   return (
     <>
       <label htmlFor="maxCP" className="max-cp">
-        <input type="checkbox" id="maxCP" />
+        <input
+          type="checkbox"
+          id="maxCP"
+          onChange={(event) => handleInput(event)}
+          value={input}
+        />
         <small>Maximum Combat Points</small>
       </label>
       <input type="text" className="input" placeholder="Pokemon or type" />
